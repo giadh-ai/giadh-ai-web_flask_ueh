@@ -1,0 +1,22 @@
+-- HÀM TÌM KIẾM KHÔNG AN TOÀN (Dễ bị SQL Injection)
+
+CREATE OR REPLACE FUNCTION public.search_products_unsafe(search_term text)
+ RETURNS SETOF product1
+ LANGUAGE plpgsql
+AS $function$
+begin
+    -- CÁCH VIẾT NÀY MỚI DỄ BỊ HACK: Cộng chuỗi trực tiếp
+    return query execute 'select * from product1 where title ilike ''%' || search_term || '%''';
+end;
+$function$;
+
+
+-- HÀM TÌM KIẾM AN TOÀN (Sử dụng tham số để chống SQLi)
+create or replace function search_products_safe(search_term text)
+returns setof product1 as $$
+begin
+    return query 
+        select * from product1 
+        where title ilike ('%' || search_term || '%');
+end;
+$$ language plpgsql security definer;

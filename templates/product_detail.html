@@ -1,0 +1,55 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 30px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; gap: 30px; flex-wrap: wrap;">
+    
+    <!-- Cột TRÁI: Ảnh sản phẩm -->
+    <div style="flex: 1 1 300px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; border-radius: 10px; padding: 20px;">
+        <img src="{{ product.image if product.image else url_for('static', filename='images/khongcoanh.png') }}" 
+             alt="{{ product.title }}" 
+             style="max-width: 100%; max-height: 400px; object-fit: contain;"
+             onerror="this.src='{{ url_for('static', filename='images/khongcoanh.png') }}'">
+    </div>
+
+    <!-- Cột PHẢI: Thông tin -->
+    <div style="flex: 1 1 400px;">
+        <!-- Nút quay lại -->
+        <a href="{{ url_for('home') }}" style="display: inline-block; margin-bottom: 15px; color: #007bff; text-decoration: none;">
+            ← Quay lại danh sách
+        </a>
+
+        <h1 style="font-size: 1.8rem; color: #333; margin-bottom: 10px;">{{ product.title }}</h1>
+        
+        <p style="font-size: 1.5rem; color: #e63946; font-weight: bold; margin-bottom: 15px;">
+            ${{ product.price }}
+        </p>
+
+        <p style="color: #555; margin-bottom: 20px;">
+            ⭐ {{ product.rating_rate }} ({{ product.rating_count }} đánh giá)
+        </p>
+        
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+        <h3 style="font-size: 1.2rem; margin-bottom: 10px;">Mô tả sản phẩm:</h3>
+        <p style="line-height: 1.6; color: #444; text-align: justify;">
+            {{ product.description if product.description else "Đang cập nhật mô tả..." }}
+        </p>
+
+        <div style="margin-top: 30px;">
+        <div style="margin-top: 30px;">
+    <button class="btn-add-cart" 
+    style="width: 100%; padding: 15px; background: #b22d30; color: white; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; font-weight: bold;"
+    onclick='addToCart({
+        "id": {{ product.id | tojson }},
+        "title": {{ product.title | tojson }},
+        "price": {{ product.price | tojson }},
+        "image": {{ (product.image if product.image else "/static/images/khongcoanh.png") | tojson }}
+    })'>
+    🛒 Thêm vào giỏ hàng
+</button>
+</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

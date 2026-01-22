@@ -1,0 +1,164 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="chat-wrapper">
+    <div class="chat-box">
+        <div class="chat-header">
+            <h3>🤖 Chatbot UEH AI</h3>
+        </div>
+
+        <div id="message-list" class="message-list">
+            <div class="message-row start">
+                <div class="bubble bot">
+                    Xin chào! Tôi là trợ lý ảo AI. Tôi có thể giúp gì cho bạn?
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." autocomplete="off">
+            <button id="btn-send" onclick="sendMessage()">Gửi</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* CSS chuyển từ React styles sang */
+    .chat-wrapper {
+        display: flex; justify-content: center; align-items: center;
+        height: 80vh; background-color: #f0f2f5; padding: 20px;
+    }
+    .chat-box {
+        width: 100%; max-width: 600px; height: 100%;
+        background-color: #fff; border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex; flex-direction: column; overflow: hidden;
+    }
+    .chat-header {
+        padding: 16px; background-color: #2196F3; color: white;
+        text-align: center; border-bottom: 1px solid #ddd;
+    }
+    .message-list {
+        flex: 1; padding: 20px; overflow-y: auto;
+        display: flex; flex-direction: column; gap: 10px;
+    }
+    .message-row {
+        display: flex; width: 100%;
+    }
+    .message-row.end { justify-content: flex-end; }   /* Tin nhắn người dùng */
+    .message-row.start { justify-content: flex-start; } /* Tin nhắn Bot */
+
+    .bubble {
+        max-width: 75%; padding: 10px 15px; border-radius: 15px;
+        font-size: 15px; line-height: 1.4; word-wrap: break-word; white-space: pre-wrap;
+    }
+    .bubble.user { background-color: #007bff; color: #fff; border-bottom-right-radius: 2px; }
+    .bubble.bot { background-color: #e9ecef; color: #000; border-bottom-left-radius: 2px; }
+    .bubble.loading { font-style: italic; color: #666; background: #f0f0f0; }
+
+    .input-area {
+        padding: 15px; border-top: 1px solid #eee;
+        display: flex; gap: 10px; background-color: #fafafa;
+    }
+    #chat-input {
+        flex: 1; padding: 12px; border-radius: 20px;
+        border: 1px solid #ccc; outline: none; font-size: 16px;
+    }
+    #btn-send {
+        padding: 10px 20px; color: white; border: none;
+        border-radius: 20px; font-weight: bold; font-size: 16px;
+        background-color: #007bff; cursor: pointer; transition: background 0.2s;
+    }
+    #btn-send:disabled { background-color: #ccc; cursor: not-allowed; }
+</style>
+
+<script>
+    const messageList = document.getElementById('message-list');
+    const inputField = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('btn-send');
+
+    // Hàm cuộn xuống cuối
+    function scrollToBottom() {
+        messageList.scrollTop = messageList.scrollHeight;
+    }
+
+    // Xử lý sự kiện Enter
+    inputField.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    async function sendMessage() {
+        const text = inputField.value.trim();
+        if (!text) return;
+
+        // 1. Hiển thị tin nhắn User
+        appendMessage(text, 'user');
+        inputField.value = '';
+        inputField.disabled = true;
+        sendBtn.disabled = true;
+
+        // 2. Hiển thị "Đang suy nghĩ..."
+        const loadingId = appendLoading();
+        scrollToBottom();
+
+        try {
+            // 3. Gọi về Server Python (Thay vì gọi trực tiếp Google)
+            const response = await fetch('/api/chat-process', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+
+            const data = await response.json();
+
+            // 4. Xóa loading và hiện tin nhắn Bot
+            removeMessage(loadingId);
+            
+            if (response.ok) {
+                appendMessage(data.reply, 'bot');
+            } else {
+                appendMessage("❌ Lỗi: " + data.reply, 'bot');
+            }
+
+        } catch (error) {
+            removeMessage(loadingId);
+            appendMessage("❌ Mất kết nối tới server.", 'bot');
+            console.error(error);
+        } finally {
+            inputField.disabled = false;
+            sendBtn.disabled = false;
+            inputField.focus();
+            scrollToBottom();
+        }
+    }
+
+    // Hàm vẽ tin nhắn lên màn hình
+    function appendMessage(text, role) {
+        const row = document.createElement('div');
+        row.className = `message-row ${role === 'user' ? 'end' : 'start'}`;
+        
+        const bubble = document.createElement('div');
+        bubble.className = `bubble ${role}`;
+        bubble.textContent = text; // Dùng textContent để chống XSS
+
+        row.appendChild(bubble);
+        messageList.appendChild(row);
+    }
+
+    // Hàm tạo hiệu ứng loading
+    function appendLoading() {
+        const id = 'loading-' + Date.now();
+        const row = document.createElement('div');
+        row.id = id;
+        row.className = 'message-row start';
+        row.innerHTML = `<div class="bubble loading">Bot đang suy nghĩ...</div>`;
+        messageList.appendChild(row);
+        return id;
+    }
+
+    function removeMessage(id) {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+    }
+</script>
+{% endblock %}

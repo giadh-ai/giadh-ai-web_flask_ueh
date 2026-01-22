@@ -1,0 +1,275 @@
+body
+{
+    margin: 0;
+}
+
+/************************Hàng 1**************************************/
+#header1 {
+  width: 100%;
+  background-color: #005f69; /* Màu xanh đậm */
+  padding: 0px 0;
+  display: flex;
+  flex-direction: row;
+
+}
+
+#logo
+{
+    
+    
+    
+}
+
+#menutop {
+  background-color: #005f69; 
+  width: 80%;
+  height: 50px;
+  margin: 0 auto; /* căn giữa trong header */
+  display: flex; /* dùng flex để bố trí .container bên phải */
+  justify-content: flex-end; /* đẩy .container sang phải */
+  align-items: center; /* căn giữa theo chiều dọc */
+  
+}
+
+
+
+/* phần container nằm bên phải */
+#menutop .container {
+ 
+  /* padding: 10px 20px;
+  border-radius: 4px; */
+}
+
+#mnu1
+{
+  display: flex;
+  list-style: none;
+}
+#mnu1 li {
+  margin: 0 15px;            /* Khoảng cách giữa các mục */
+}
+
+#mnu1 a{
+  text-decoration: none;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+}
+
+#mnu1 a:hover {
+  background-color: #ffcc80; /* Nền khi hover */
+  color: #000;               /* Đổi màu chữ khi hover */
+ 
+}
+
+/******************Hearder2******************/
+
+#header2{
+
+        
+        width: 100%;
+        
+        }
+
+#divmenu
+{
+     height: 53px;
+     border-bottom: 1px solid #e6e6e6;
+     display: flex;
+    list-style: none;
+    color: #005f69;
+}
+
+#mnu2
+{
+  display: flex;
+  list-style: none;
+  color: #005f69;
+}
+#mnu2 li {
+  margin: 0 15px;            /* Khoảng cách giữa các mục */
+}
+
+#mnu2 a{
+  text-decoration: none;
+  color: #005f69;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#mnu2 a:hover {
+  background-color: #ffcc80; /* Nền khi hover */
+  color: #e80d0d;               /* Đổi màu chữ khi hover */
+ 
+}
+
+/********************Vùng Footer***************************/
+#footer1 {
+  width: 100%;
+  background-color: rgb(0, 95, 105); 
+  padding: 0px 0;
+  height: 200px;
+
+}
+
+#footer1 .content  {
+  height: inherit;
+  width: 1200px;
+  /* background-color: rgb(158, 218, 17);  */
+  /* background-color: rgb(236, 153, 218);  */
+  margin: 0 auto; /* căn giữa trong header */
+  display: flex; /* dùng flex để bố trí .container bên phải */
+  justify-content: flex-start; /* đẩy .container sang trái */
+  align-items: center; /* căn giữa theo chiều dọc */
+ 
+}
+
+#khoi1
+{
+  padding-top: 10px;
+  width: 400px;
+  /* background-color: #ffcc80; */
+  height: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 12px;
+  color: #fff;
+}
+#khoi2
+{
+  padding-top: 20px;
+  width: 250px;
+ 
+  height: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  color: #fff;
+}
+
+#khoi3
+{
+  padding-top: 20px;
+  width: 250px;
+  
+  height: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  color: #fff;
+}
+
+#khoi4
+{
+  padding-top: 20px;
+  width: 250px;
+  
+  height: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  color: #fff;
+}
+
+/********************PHẦN TRÌNH BÀY HÀNG HÓA*************************/
+
+/* --- Style cho danh sách sản phẩm (Copy từ ListProducts_SP.js) --- */
+
+/* Khung lưới sản phẩm */
+.product-grid {
+    display: grid;
+    /* Tự động chia cột, tối thiểu 220px */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px; /* Giới hạn chiều rộng để đẹp hơn */
+    margin: 0 auto;
+}
+
+/* Thẻ sản phẩm (Card) */
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    text-decoration: none; /* Bỏ gạch chân nếu thẻ a */
+    color: inherit;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Phần ảnh sản phẩm */
+.product-image-wrapper {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.product-image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Giữ tỉ lệ ảnh không bị méo */
+}
+
+/* Phần thông tin (Tiêu đề, giá, sao) */
+.product-info {
+    text-align: left;
+    flex-grow: 1; /* Đẩy nút xuống đáy */
+}
+
+.product-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 1rem;
+    min-height: 40px; /* Giữ chiều cao đều nhau nếu tên dài/ngắn */
+    
+    /* Cắt bớt nếu tên quá dài (tùy chọn) */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-price {
+    color: #e63946;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 0 0 5px 0;
+}
+
+.product-rating {
+    color: #555;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Nút thêm vào giỏ */
+.btn-add-cart {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+.btn-add-cart:hover {
+    background-color: #0056b3;
+}
+

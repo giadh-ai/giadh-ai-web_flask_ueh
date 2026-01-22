@@ -1,0 +1,19 @@
+{% extends "index.html" %}
+{% block content %}
+<h1>Chi Tiết Sản Phẩm</h1>
+{% if product %}
+    <div style="border: 1px solid #ccc; padding: 20px; max-width: 600px;">
+        <img src="{{ url_for('static', filename='images/khongcoanh.png') }}" alt="Product Image" style="width: 300px; height: auto;">
+        <h2>{{ product.product_name }}</h2> <!-- Thay đổi vì: Truy cập product_name từ dictionary. -->
+        <p><strong>Giá:</strong> ${{ product.unit_price | round(2) }}</p> <!-- Thay đổi vì: Truy cập unit_price từ dictionary. -->
+        <p><strong>Tồn kho:</strong> {{ product.units_in_stock }}</p> <!-- Thay đổi vì: Truy cập units_in_stock từ dictionary. -->
+        <p><strong>Số lượng mỗi đơn vị:</strong> {{ product.quantity_per_unit }}</p> <!-- Thay đổi vì: Truy cập quantity_per_unit từ dictionary. -->
+        <p><strong>Đơn vị đang đặt hàng:</strong> {{ product.units_on_order }}</p> <!-- Thay đổi vì: Truy cập units_on_order từ dictionary. -->
+        <p><strong>Mức đặt hàng lại:</strong> {{ product.reorder_level }}</p> <!-- Thay đổi vì: Truy cập reorder_level từ dictionary. -->
+        <p><strong>Ngừng kinh doanh:</strong> {% if product.discontinued %}Có{% else %}Không{% endif %}</p> <!-- Thay đổi vì: Truy cập discontinued từ dictionary. -->
+        <a href="{{ url_for('home') }}">Quay lại danh sách sản phẩm</a>
+    </div>
+{% else %}
+    <p>Sản phẩm không tồn tại.</p>
+{% endif %}
+{% endblock %}

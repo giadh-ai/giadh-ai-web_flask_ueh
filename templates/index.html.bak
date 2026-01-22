@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trường Đại Học UEH</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+    <!-- Nhúng file xử lý Giỏ hàng -->
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+</head>
+<body>
+    <header>
+       <div id="header1">
+            <div id="logo">
+                <a href="{{ url_for('home') }}">
+                    <img src="{{ url_for('static', filename='images/logo-header.png') }}" height="43" style="padding-top:5px"/>
+                </a>
+            </div>
+            <div id="menutop">
+                <div class="container">
+                   <ul id="mnu1">
+                    <li><a href="{{ url_for('home') }}">Trang chủ</a></li>
+                    <li><a href="#">Tân Sinh viên</a></li>
+                    <li><a href="#">Người học</a></li>
+                    <li><a href="#">Cựu sinh viên</a></li>
+                    <li><a href="#">Người học tiềm năng</a></li>
+                    <li><a href="#">UEHer</a></li>
+                    <li><a href="#">UEH Mekong</a></li>
+                    <li><a href="#">Hỗ trợ</a></li>
+                   </ul>
+                </div>
+            </div>        
+       </div>
+       
+       <div id="header2">
+        <div id="divmenu">
+            <!-- Thêm style flex để căn chỉnh -->
+            <ul id="mnu2" style="display: flex; list-style: none; padding: 0; margin: 0; align-items: center; width: 100%;">
+                <li><a href="#">Thông tin cá nhân</a></li>
+                <li><a href="{{ url_for('gioi_thieu') }}">Thông tin UEH</a></li>
+                <li><a href="#">Lịch làm việc</a></li>
+                <li><a href="#">Quản lý công việc</a></li>
+                <li><a href="#">Giảng dạy - NCKH</a></li>
+                <li><a href="#">Tiện ích</a></li>
+
+                <!-- MỤC GIỎ HÀNG (Đẩy sang phải bằng margin-left: auto) -->
+                <li style="margin-left: auto; margin-right: 20px;">
+                    <a href="{{ url_for('cart') }}" style="display: flex; align-items: center; background: #a92326; padding: 5px 15px; border-radius: 20px; color: white !important;">
+                        🛒 Giỏ hàng
+                        <!-- Badge số lượng -->
+                        <span id="cart-badge" style="background-color: yellow; color: red; border-radius: 50%; padding: 2px 6px; font-size: 12px; margin-left: 5px; font-weight: bold; display: none;">0</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+       </div>
+    </header>
+
+    <div id="noidung" style="width: 100%; min-height: 500px; background-image: url('{{ url_for('static', filename='images/nso-splash-landscape-1499x999.gif') }}'); background-size: cover;">
+        <div class="container" style="padding: 20px; background: rgba(255,255,255,0.95); min-height: 600px;">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <footer>
+        <div id="footer1">
+            <div class="content">
+                <div id="khoi1">
+                   <img src="{{ url_for('static', filename='images/logo-footer.png') }}" height="44"/>
+                   <p>59C Nguyễn Ðình Chiểu, phường Xuân Hòa, Thành phố Hồ Chí Minh</p>
+                   <p>Điện thoại: 84.28.7306.1976 - Fax: 84.28.38250359</p>
+                   <p>Email: info@ueh.edu.vn</p>
+                </div>
+                <div id="khoi2">
+                    <p>UEH Tuyển sinh</p>
+                    <p>UEH Future</p>
+                    <p>Thông tin công khai</p>
+                </div>
+                <div id="khoi3">
+                    <p>UEH Virtual Tour</p>
+                    <p>UEH Global</p>
+                    <p>UEH Green Campus</p>
+                </div>
+                 <div id="khoi4">
+                    <p>UEH E-learning</p>
+                    <p>UEH Cơ hội nghề nghiệp</p>
+                    <p>Hệ thống nhận diện</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

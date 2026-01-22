@@ -1,0 +1,170 @@
+body
+{
+    margin: 0;
+}
+
+/************************Hàng 1**************************************/
+#header1 {
+  width: 100%;
+  background-color: #005f69; /* Màu xanh đậm */
+  padding: 0px 0;
+  display: flex;
+  flex-direction: row;
+
+}
+
+#logo
+{
+    
+    
+    
+}
+
+#menutop {
+  background-color: #005f69; 
+  width: 80%;
+  height: 50px;
+  margin: 0 auto; /* căn giữa trong header */
+  display: flex; /* dùng flex để bố trí .container bên phải */
+  justify-content: flex-end; /* đẩy .container sang phải */
+  align-items: center; /* căn giữa theo chiều dọc */
+  
+}
+
+
+
+/* phần container nằm bên phải */
+#menutop .container {
+ 
+  /* padding: 10px 20px;
+  border-radius: 4px; */
+}
+
+#mnu1
+{
+  display: flex;
+  list-style: none;
+}
+#mnu1 li {
+  margin: 0 15px;            /* Khoảng cách giữa các mục */
+}
+
+#mnu1 a{
+  text-decoration: none;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+}
+
+#mnu1 a:hover {
+  background-color: #ffcc80; /* Nền khi hover */
+  color: #000;               /* Đổi màu chữ khi hover */
+ 
+}
+
+/******************Hearder2******************/
+
+#header2{
+
+        
+        width: 100%;
+        
+        }
+
+#divmenu
+{
+     height: 53px;
+     border-bottom: 1px solid #e6e6e6;
+     display: flex;
+    list-style: none;
+    color: #005f69;
+}
+
+#mnu2
+{
+  display: flex;
+  list-style: none;
+  color: #005f69;
+}
+#mnu2 li {
+  margin: 0 15px;            /* Khoảng cách giữa các mục */
+}
+
+#mnu2 a{
+  text-decoration: none;
+  color: #005f69;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#mnu2 a:hover {
+  background-color: #ffcc80; /* Nền khi hover */
+  color: #e80d0d;               /* Đổi màu chữ khi hover */
+ 
+}
+
+/********************Vùng Footer***************************/
+#footer1 {
+  width: 100%;
+  background-color: rgb(0, 95, 105); 
+  padding: 0px 0;
+  height: 200px;
+
+}
+
+#footer1 .content  {
+  height: inherit;
+  width: 1200px;
+  /* background-color: rgb(158, 218, 17);  */
+  /* background-color: rgb(236, 153, 218);  */
+  margin: 0 auto; /* căn giữa trong header */
+  display: flex; /* dùng flex để bố trí .container bên phải */
+  justify-content: flex-start; /* đẩy .container sang trái */
+  align-items: center; /* căn giữa theo chiều dọc */
+ 
+}
+
+#khoi1
+{
+  padding-top: 10px;
+  width: 400px;
+  /* background-color: #ffcc80; */
+  height: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 12px;
+  color: #fff;
+}
+#khoi2
+{
+  padding-top: 20px;
+  width: 250px;
+ 
+  height: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  color: #fff;
+}
+
+#khoi3
+{
+  padding-top: 20px;
+  width: 250px;
+  
+  height: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  color: #fff;
+}
+
+#khoi4
+{
+  padding-top: 20px;
+  width: 250px;
+  
+  height: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  color: #fff;
+}
+

@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div style="padding: 20px;">
+    <h2 style="margin-bottom: 20px; text-align: center;">Danh sách sản phẩm</h2>
+
+    <div class="product-grid">
+        {% if products %}
+            {% for p in products %}
+                <div class="product-card" onclick="window.location.href='{{ url_for('product_detail', product_id=p.id) }}'">
+                    
+                    <div class="product-image-wrapper">
+                        <img src="{{ p.image if p.image else url_for('static', filename='images/khongcoanh.png') }}" 
+                             alt="{{ p.title }}"
+                             onerror="this.src='{{ url_for('static', filename='images/khongcoanh.png') }}'">
+                    </div>
+
+                    <div class="product-info">
+                        <div class="product-title">{{ p.title }}</div>
+                        <p class="product-price">${{ p.price }}</p>
+                        <small class="product-rating">
+                            ⭐ {{ p.rating_rate }} | ({{ p.rating_count }} đánh giá)
+                        </small>
+                    </div>
+
+                    <button class="btn-add-cart" 
+                        onclick="event.stopPropagation(); addToCart({
+                            id: {{ p.id }},
+                            title: '{{ p.title | replace("'", "\\'") }}', 
+                            price: {{ p.price }},
+                            image: '{{ p.image if p.image else url_for('static', filename='images/khongcoanh.png') }}'
+                        })">
+                        🛒 Thêm vào giỏ
+                    </button>
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; width: 100%;">Không có dữ liệu hoặc lỗi kết nối.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+create or replace function login_unsafe_v2(input_username text, input_password text)
+returns setof tbl_user as $$
+begin
+    -- CẢNH BÁO: Đây là mã lỗi bảo mật để phục vụ học tập
+    -- Việc cộng chuỗi trực tiếp vào execute tạo ra lỗ hổng SQL Injection
+    return query execute 
+        'select * from tbl_user where username = ''' || input_username || ''' and password_hash = ''' || input_password || '''';
+end;
+$$ language plpgsql security definer;

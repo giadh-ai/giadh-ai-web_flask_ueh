@@ -1,0 +1,108 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div style="padding: 20px;">
+    <div style="margin-bottom: 30px; text-align: center; background: #f4f4f4; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
+        <h3 style="color: #a92326;">Hệ thống tìm kiếm sản phẩm (Demo SQLi)</h3>
+        <input type="text" id="txtSearch" style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" placeholder="Nhập chuỗi UNION...">
+        <div style="margin-top: 10px;">
+            <button onclick="doSearch('/api/search-unsafe')" style="background: #ff4d4d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Tìm kiếm KHÔNG AN TOÀN</button>
+            <button onclick="doSearch('/api/search-safe')" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px;">Tìm kiếm AN TOÀN</button>
+        </div>
+    </div>
+
+    <h2 style="margin-bottom: 20px; text-align: center;" id="list-title">Danh sách sản phẩm</h2>
+
+    <div class="product-grid" id="product-container">
+        {% if products %}
+            {% for p in products %}
+                <div class="product-card" style="position: relative;">
+                    <div onclick="window.location.href='{{ url_for('product_detail', product_id=p.id) }}'" style="cursor: pointer;">
+                        <div class="product-image-wrapper">
+                            <img src="{{ p.image if p.image else url_for('static', filename='images/khongcoanh.png') }}" onerror="this.src='/static/images/khongcoanh.png'">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">{{ p.title }}</div>
+                            <p class="product-price">${{ p.price }}</p>
+                        </div>
+                    </div>
+                    <button class="btn-add-cart" 
+                        style="position: relative; z-index: 999; width: 100%;"
+                        onclick="addToCart({id: {{ p.id | tojson }}, title: {{ p.title | tojson }}, price: {{ p.price | tojson }}, image: {{ (p.image if p.image else '/static/images/khongcoanh.png') | tojson }}})">
+                        🛒 Thêm vào giỏ
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function doSearch(endpoint) {
+    const keyword = document.getElementById('txtSearch').value;
+    const container = document.getElementById('product-container');
+    const titleHeader = document.getElementById('list-title');
+
+    if (!keyword.trim()) { window.location.reload(); return; }
+    container.innerHTML = '<p style="text-align: center; width: 100%;">Đang truy vấn...</p>';
+
+    fetch(endpoint, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({keyword: keyword})
+    })
+    .then(res => res.json())
+    .then(data => {
+        container.innerHTML = '';
+        if (!Array.isArray(data)) {
+            container.innerHTML = `<div style="color:red; padding:20px; border:1px dashed red; width:100%;">Lỗi SQL: ${data.message || 'Sai cấu trúc'}</div>`;
+            return;
+        }
+
+        titleHeader.innerText = endpoint.includes('unsafe') ? "KẾT QUẢ TRUY VẤN (INJECTION)" : "Kết quả tìm kiếm";
+
+        data.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.style.position = 'relative';
+
+            // Tạo phần nội dung (ảnh + tên)
+            const content = document.createElement('div');
+            content.style.cursor = 'pointer';
+            content.onclick = () => { window.location.href = `/product/${p.id}`; };
+            content.innerHTML = `
+                <div class="product-image-wrapper">
+                    <img src="${p.image || '/static/images/khongcoanh.png'}" onerror="this.src='/static/images/khongcoanh.png'">
+                </div>
+                <div class="product-info">
+                    <div class="product-title" style="color: ${endpoint.includes('unsafe') ? 'blue' : 'inherit'}">${p.title || 'N/A'}</div>
+                    <p class="product-price">$${p.price || 0}</p>
+                </div>
+            `;
+
+            // Tạo nút bấm (Add to cart)
+            const btn = document.createElement('button');
+            btn.className = 'btn-add-cart';
+            btn.style.position = 'relative';
+            btn.style.zIndex = '999';
+            btn.style.width = '100%';
+            btn.innerText = '🛒 Thêm vào giỏ';
+            btn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Tuyệt đối không cho sủi bọt
+                addToCart({
+                    id: p.id,
+                    title: p.title,
+                    price: p.price,
+                    image: p.image || '/static/images/khongcoanh.png'
+                });
+            };
+
+            card.appendChild(content);
+            card.appendChild(btn);
+            container.appendChild(card);
+        });
+    });
+}
+</script>
+{% endblock %}

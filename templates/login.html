@@ -1,0 +1,77 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; border-radius: 15px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #a92326; margin-bottom: 25px;">Hệ thống Đăng nhập</h2>
+    
+    <div id="login-form">
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Username:</label>
+            <input type="text" id="username" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="Nhập admin' -- để thử SQL Injection">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Password:</label>
+            <input type="password" id="password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="Mật khẩu bất kỳ nếu dùng SQL Injection">
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <button onclick="handleLogin('/api/login-unsafe')" style="background: #ff4d4d; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s;">
+                Đăng nhập KHÔNG AN TOÀN (Lỗi Injection)
+            </button>
+            
+            <button onclick="handleLogin('/api/login-safe')" style="background: #28a745; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s;">
+                Đăng nhập AN TOÀN
+            </button>
+        </div>
+    </div>
+
+    <div id="result" style="margin-top: 20px; font-weight: bold; text-align: center; min-height: 20px;"></div>
+</div>
+
+<script>
+function handleLogin(endpoint) {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const resultDiv = document.getElementById('result');
+
+    if (!username) {
+        resultDiv.style.color = "orange";
+        resultDiv.innerText = "Vui lòng nhập Username!";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+
+    resultDiv.style.color = "blue";
+    resultDiv.innerText = "Đang xác thực...";
+
+    fetch(endpoint, {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            resultDiv.style.color = "green";
+            resultDiv.innerHTML = data.msg + "<br>Đang chuyển hướng...";
+            
+            // Chờ 1 giây để người dùng thấy thông báo thành công rồi chuyển hướng về trang chủ
+            setTimeout(() => {
+                window.location.href = "{{ url_for('home') }}";
+            }, 1000);
+        } else {
+            resultDiv.style.color = "red";
+            resultDiv.innerText = data.msg;
+        }
+    })
+    .catch(err => {
+        resultDiv.style.color = "red";
+        resultDiv.innerText = "Lỗi kết nối đến máy chủ!";
+        console.error(err);
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div style="padding: 20px;">
+    <div style="margin-bottom: 30px; text-align: center; background: #f4f4f4; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
+        <h3 style="color: #a92326;">Hệ thống tìm kiếm sản phẩm (Demo SQLi)</h3>
+        <input type="text" id="txtSearch" style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" 
+               placeholder="Nhập chuỗi UNION để lấy dữ liệu User...">
+        <div style="margin-top: 10px;">
+            <button onclick="doSearch('/api/search-unsafe')" style="background: #ff4d4d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Tìm kiếm KHÔNG AN TOÀN</button>
+            <button onclick="doSearch('/api/search-safe')" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px;">Tìm kiếm AN TOÀN</button>
+        </div>
+    </div>
+
+    <h2 style="margin-bottom: 20px; text-align: center;" id="list-title">Danh sách sản phẩm</h2>
+
+    <div class="product-grid" id="product-container">
+        {% if products %}
+            {% for p in products %}
+                <div class="product-card" onclick="window.location.href='{{ url_for('product_detail', product_id=p.id) }}'">
+                    <div class="product-image-wrapper">
+                        <img src="{{ p.image if p.image else url_for('static', filename='images/khongcoanh.png') }}" 
+                             alt="{{ p.title }}" onerror="this.src='/static/images/khongcoanh.png'">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title" style="font-weight: bold;">{{ p.title }}</div>
+                        <p class="product-price" style="color: #a92326;">${{ p.price }}</p>
+                        <p style="font-size: 12px; color: #666;">Danh mục: {{ p.category }}</p>
+                        <small>⭐ {{ p.rating_rate }} ({{ p.rating_count }} đánh giá)</small>
+                    </div>
+                    <button class="btn-add-cart">🛒 Thêm vào giỏ</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function doSearch(endpoint) {
+    const keyword = document.getElementById('txtSearch').value;
+    const container = document.getElementById('product-container');
+    const titleHeader = document.getElementById('list-title');
+
+    if (!keyword.trim()) { window.location.reload(); return; }
+
+    container.innerHTML = '<p style="text-align: center; width: 100%;">Đang truy vấn SQL...</p>';
+
+    fetch(endpoint, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({keyword: keyword})
+    })
+    .then(res => res.json())
+    .then(data => {
+        container.innerHTML = '';
+        
+        // KIỂM TRA NẾU DATA KHÔNG PHẢI LÀ MẢNG (ĐÂY LÀ CHỖ GÂY LỖI FOREACH)
+        if (!Array.isArray(data)) {
+            titleHeader.innerText = "THÔNG BÁO TỪ DATABASE (DEBUG)";
+            container.innerHTML = `
+                <div style="width: 100%; padding: 20px; background: #fff0f0; border: 2px dashed red; color: red;">
+                    <h4>Phản hồi không phải dạng danh sách:</h4>
+                    <pre style="text-align: left; background: #eee; padding: 10px;">${JSON.stringify(data, null, 2)}</pre>
+                    <p><b>Gợi ý:</b> Nếu thấy lỗi "mismatch column", hãy kiểm tra lại số lượng cột trong lệnh UNION.</p>
+                </div>`;
+            return;
+        }
+
+        if (data.length === 0) {
+            container.innerHTML = '<p style="text-align: center; width: 100%;">Không có kết quả phù hợp.</p>';
+            return;
+        }
+
+        titleHeader.innerText = endpoint.includes('unsafe') ? "DỮ LIỆU TRUY XUẤT THÀNH CÔNG" : "Kết quả tìm kiếm";
+
+        data.forEach(p => {
+    container.innerHTML += `
+        <div class="product-card" onclick="window.location.href='/product/${p.id}'">
+            <div class="product-image-wrapper">
+                <img src="${p.image || '/static/images/khongcoanh.png'}" onerror="this.src='/static/images/khongcoanh.png'">
+            </div>
+            <div class="product-info">
+                <div class="product-title" style="color: blue; font-weight: bold;">${p.title || 'N/A'}</div>
+                <p class="product-price" style="color: red;">$${p.price || 0}</p>
+            </div>
+            <button class="btn-add-cart" 
+                onclick="event.stopPropagation(); addToCart({
+                    id: ${p.id},
+                    title: '${(p.title || '').replace(/'/g, "\\'")}', 
+                    price: ${p.price || 0},
+                    image: '${p.image || '/static/images/khongcoanh.png'}'
+                })">
+                🛒 Thêm vào giỏ
+            </button>
+        </div>`;
+});
+    })
+    .catch(err => {
+        container.innerHTML = `<p style="color: red;">Lỗi kết nối Server: ${err}</p>`;
+    });
+}
+</script>
+{% endblock %}
