@@ -5,6 +5,10 @@ import hashlib
 
 app = Flask(__name__, template_folder='templates')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config.update(
+    SESSION_COOKIE_SAMESITE="None",
+    SESSION_COOKIE_SECURE=True
+)
 
 # BẮT BUỘC: Thiết lập Secret Key để có thể sử dụng Session (lưu trạng thái đăng nhập)
 app.secret_key = 'ueh_secret_key_phong_chong_sql_injection'
@@ -123,7 +127,36 @@ def chat_process():
 @app.route('/cart')
 def cart(): return render_template('cart.html')
 
-# --- 5. GIỮ NGUYÊN TẤT CẢ CÁC TRANG TĨNH KHÁC CỦA ANH ---
+# --- 5. SỬA THÔNG TIN NGƯỜI DÙNG (CÓ CSRF) ---
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if not session.get('user'):
+        return redirect(url_for('login_page'))
+
+    if request.method == 'POST':
+        fullname = request.form.get('fullname')
+        email = request.form.get('email')
+
+        user_id = session['user']['id']
+
+        url = f"{SUPABASE_URL}/rest/v1/tbl_user?id=eq.{user_id}"
+        payload = {
+            "fullname": fullname,
+            "email": email
+        }
+
+        # ⚠️ KHÔNG CSRF TOKEN → DÍNH CSRF
+        response = requests.patch(url, headers=HEADERS, json=payload)
+
+        if response.status_code in [200, 204]:
+            # cập nhật lại session cho đẹp
+            session['user']['fullname'] = fullname
+            session['user']['email'] = email
+            #return render_template('profile.html', success=True)
+            return redirect(url_for('home'))
+
+    return render_template('profile.html', success=False)
+# --- 6. GIỮ NGUYÊN TẤT CẢ CÁC TRANG TĨNH KHÁC CỦA ANH ---
 @app.route('/gioi-thieu')
 def gioi_thieu(): return render_template('gioi_thieu.html')
 
