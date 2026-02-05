@@ -36,11 +36,11 @@
  <div id="divmenu">
      <ul id="mnu2" style="display: flex; list-style: none; padding: 0; margin: 0; align-items: center; width: 100%;">
          <li><a href="/chat">Trợ lý AI</a></li>
-         <li><a href="{{ url_for('gioi_thieu') }}">Thông tin UEH</a></li>
-         <li><a href="#">Lịch làm việc</a></li>
+         <li><a href="{{ url_for('gioi_thieu') }}"></a></li>
+         <li><a href="{{ url_for('gioi_thieu') }}">Lịch làm việc</a></li>
          <li><a href="#">Quản lý công việc</a></li>
          <li><a href="#">Giảng dạy - NCKH</a></li>
-         <li><a href="#">Tiện ích</a></li>
+         <li><a href="{{ url_for('profile') }}">Tài khoản</a></li>
 
          <li style="margin-left: auto;">
              <a href="{{ url_for('cart') }}" style="display: flex; align-items: center; background: #a92326; padding: 5px 15px; border-radius: 20px; color: white !important; margin-right: 10px;">
