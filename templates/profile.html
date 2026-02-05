@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+{% block content %}
+
+<h2 style="color:#a92326;">👤 Cập nhật thông tin cá nhân</h2>
+
+{% if success %}
+<p style="color:green; font-weight:bold;">✔ Cập nhật thành công!</p>
+{% endif %}
+
+<form method="POST">
+    <div style="margin-bottom:15px;">
+        <label>Họ tên hiển thị:</label><br>
+        <input type="text" name="fullname"
+               value="{{ session['user']['fullname'] }}"
+               style="width:300px; padding:8px;">
+    </div>
+
+    <div style="margin-bottom:15px;">
+        <label>Email:</label><br>
+        <input type="email" name="email"
+               value="{{ session['user']['email'] }}"
+               style="width:300px; padding:8px;">
+    </div>
+
+    <button type="submit"
+            style="background:#a92326; color:white; padding:10px 20px; border:none;">
+        💾 Lưu thay đổi
+    </button>
+</form>
+
+<p style="margin-top:20px; color:gray;">
+⚠ Trang này <b>KHÔNG có CSRF Token</b> – dùng để demo CSRF attack.
+</p>
+
+{% endblock %}
